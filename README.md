@@ -9,4 +9,6 @@ STEP 3: unzip uvdesk-community-current-stable.zip
 
 STEP 4: For installation, set full permissions on folder uvdesk-community-v1.0.12: chmod 777 -R uvdesk-community-v1.0.12
 
-STEP 5: Now watch this Docker magic: docker-compose --file docker-compose.yml up -d
+STEP 5:docker-compose --file docker-compose.yml up -d
+
+Note: Edit docker-compose.yml file to change Mysql default password and database name. You will need this info later to complete setup.
