@@ -1,0 +1,54 @@
+version: '3.8'
+services:
+  mysql:
+    hostname: mysql
+    image: mysql/mysql-server:8.0.22-1.1.18
+    container_name: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=uvdesk_db
+      - MYSQL_USER=uvdesk
+      - MYSQL_PASSWORD=password
+    networks:
+      static-network:
+        ipv4_address: 172.20.0.2
+    expose:
+      - "3306"
+      - "33060"
+    volumes:
+      - "/root/docker/db_uvdesk:/var/lib/mysql"
+ 
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile_php_uvdesk
+    hostname: php
+    image: php:uvdesk
+    container_name: php
+    networks:
+      static-network:
+        ipv4_address: 172.20.0.3
+    expose:
+      - "9000"
+    volumes:
+      - "./uvdesk-community-v1.0.12:/var/www"
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile_nginx_uvdesk
+    image: nginx:uvdesk
+    container_name: nginx
+    networks:
+      static-network:
+        ipv4_address: 172.20.0.4
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - "./nginx/certs:/etc/nginx/certs"
+      - "./uvdesk-community-v1.0.12:/var/www:ro"
+networks:
+  static-network:
+    ipam:
+      config:
+        - subnet: "172.20.0.0/24"
